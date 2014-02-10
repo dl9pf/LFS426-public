@@ -35,7 +35,9 @@ STREAMURL="http://www.cs.virginia.edu/stream/FTP/Code/stream.c"
 STREAMFILE="stream.c"
 STREAMDIR="stream-test"
 
-
+LLCBENCHURL="http://icl.cs.utk.edu/projects/llcbench/llcbench.tar.gz"
+LLCBENCHFILE="llcbench.tar.gz"
+LLCBENCHDIR=""
 
 mkdir -p $RUNDIR
 pushd $RUNDIR
@@ -51,5 +53,7 @@ pushd $RUNDIR
     dl $AIMFILE $AIMURL
 
     dl $STREAMFILE $STREAMURL
+
+    dl $LLCBENCHFILE $LLCBENCHURL
 
 popd
