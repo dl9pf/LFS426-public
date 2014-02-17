@@ -2,6 +2,7 @@
 
 
 RUNDIR=~/LFS426-tests
+DATEDIR=`date +%F--%H-%M`
 #echo $RUNDIR
 
 #DOWNLOAD
@@ -10,6 +11,12 @@ function dl {
     if test ! -f $1 ; then 
 	wget -O $1 "$2" || exit 1
     fi
+}
+
+function extract {
+
+    tar -xf ../$1 || exit 1
+
 }
 
 LTPURL="https://sourceforge.net/projects/ltp/files/LTP%20Source/ltp-20140115/ltp-full-20140115.tar.xz/download"
@@ -30,6 +37,10 @@ UNIXBENCHDIR=""
 AIMURL="http://downloads.sourceforge.net/project/re-aim-7/re-aim/7.0.1.13/osdl-aim-7.0.1.13.tar.gz?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fre-aim-7%2F&ts=1392037318&use_mirror=switch"
 AIMFILE="osdl-aim-7.0.1.13.tar.gz"
 AIMDIR=""
+
+STRESSURL="http://people.seas.harvard.edu/~apw/stress/stress-1.0.4.tar.gz"
+STRESSFILE="stress-1.0.4.tar.gz"
+STRESSDIR="stress-1.0.4"
 
 STREAMURL="http://www.cs.virginia.edu/stream/FTP/Code/stream.c"
 STREAMFILE="stream.c"
@@ -52,8 +63,21 @@ pushd $RUNDIR
 
     dl $AIMFILE $AIMURL
 
+    dl $STRESSFILE $STRESSURL
     dl $STREAMFILE $STREAMURL
 
     dl $LLCBENCHFILE $LLCBENCHURL
 
+popd
+
+
+pushd $RUNDIR
+    mkdir -p $DATEDIR
+    pushd $DATEDIR
+	
+	# LTP
+	extract $LTPFILE
+	
+	
+    popd
 popd
