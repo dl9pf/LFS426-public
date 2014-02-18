@@ -41,6 +41,10 @@ AIMURL="http://downloads.sourceforge.net/project/re-aim-7/re-aim/7.0.1.13/osdl-a
 AIMFILE="osdl-aim-7.0.1.13.tar.gz"
 AIMDIR="osdl-aim-7"
 
+AIM2URL=
+AIM2FILE=
+AIM2DIR=
+
 STRESSURL="http://people.seas.harvard.edu/~apw/stress/stress-1.0.4.tar.gz"
 STRESSFILE="stress-1.0.4.tar.gz"
 STRESSDIR="stress-1.0.4"
@@ -107,9 +111,18 @@ pushd $RUNDIR
 	# UNIXBENCH
 	extract $UNIXBENCHFILE $UNIXBENCHDIR
 	pushd $UNIXBENCHDIR
-	    make clean
+#	    make clean
 	    make
 	popd
+	
+	# AIM
+	extract $AIMFILE $AIMDIR
+	pushd $AIMDIR
+	    if test ! -f aclocal.m4 ; then
+		./bootstrap
+	    fi
+	popd
+	
     popd
 popd
 
@@ -189,8 +202,14 @@ EOF
 		# UnixBench
 		mkdir -p UnixBench
 		pushd UnixBench
-			sh $RUNDIR/$BUILDDIR/$UNIXBENCHDIR/Run
+			pushd $RUNDIR/$BUILDDIR/$UNIXBENCHDIR/
+			    ./Run
+			popd
+			    mv $RUNDIR/$BUILDDIR/$UNIXBENCHDIR/results/* .
+			popd
 		popd
+		
+		
 	popd
 	
 popd

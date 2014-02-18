@@ -27,7 +27,7 @@ Package { ensure => "installed" }
 
 $common = [	"strace", "sudo", "wget", "screen", "git", "binutils", 
 		"gcc", "autoconf", "automake", "m4", "mc","gcc-c++", "gcc-fortran", 
-		"bonnie", "bonnie++", "make", 
+		"bonnie", "bonnie++", "make", "libtool",
 	]
 
 
