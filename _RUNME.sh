@@ -95,32 +95,50 @@ pushd $RUNDIR
 	# LMBENCH2
 	extract $LMBENCH2FILE $LMBENCH2DIR
 	pushd $LMBENCH2DIR
-	    sed -i -e "s#all: \$(EXES) bk.ver#all: \$(EXES)#" src/Makefile
-	    sed -i -e "s#RESULTS=Results/\$(OS)#RESULTS?=Results/\$(OS)#" src/Makefile
-	    make
+	    if test ! -f bin/x86_64-linux-gnu/lmbench.a ; then
+		sed -i -e "s#all: \$(EXES) bk.ver#all: \$(EXES)#" src/Makefile
+		sed -i -e "s#RESULTS=Results/\$(OS)#RESULTS?=Results/\$(OS)#" src/Makefile
+		make
+	    fi
 	popd
 	#
 	
 	# LMBENCH3
 	extract $LMBENCH3FILE $LMBENCH3DIR
 	pushd $LMBENCH3DIR
-	    sed -i -e "s#\$O/lmbench : ../scripts/lmbench bk.ver#\$O/lmbench : ../scripts/lmbench#" src/Makefile
-	make 
+	    if test ! -f bin/x86_64-linux-gnu/lmbench.a ; then
+		sed -i -e "s#\$O/lmbench : ../scripts/lmbench bk.ver#\$O/lmbench : ../scripts/lmbench#" src/Makefile
+		make 
+	    fi
 	popd
 	
 	# UNIXBENCH
 	extract $UNIXBENCHFILE $UNIXBENCHDIR
 	pushd $UNIXBENCHDIR
-#	    make clean
-	    make
+	    if test ! -f ./pgms/dhry2 ; then
+		make clean
+		make
+	    fi
 	popd
 	
 	# AIM
 	extract $AIMFILE $AIMDIR
 	pushd $AIMDIR
 	    if test ! -f aclocal.m4 ; then
+		sed -i -e 's#CFLAGS="-W -Wall -lm -ffloat-store -g -O -D_GNU_SOURCE -DSHARED_OFILE"#CFLAGS="-W -Wall -lm -ffloat-store -g -O -D_GNU_SOURCE -DSHARED_OFILE -laio -lpthread"#g' configure.in
+		sed -i -e 's#"-O2 -g -pg"#"-O2 -g -pg -laio -lpthread"#' src/configure.in
 		./bootstrap
 	    fi
+	    if test ! -f /usr/local/bin/reaim ; then
+		./configure
+		make
+		echo "" | make install
+	    fi
+	popd
+	
+	# Stress
+	extract $STRESSFILE $STRESSDIR
+	pushd $STRESSDIR
 	    if test ! -d out ; then
 		./configure --prefix=`pwd`/out
 		make
@@ -128,10 +146,16 @@ pushd $RUNDIR
 	    fi
 	popd
 	
+	# Stream
+	mkdir -p $STREAMDIR
+	pushd $STREAMDIR
+	    gcc -o stream ../../$STREAMFILE
+	popd
+	
     popd
 popd
 
-exit 0
+#exit 0
 # RUN
 pushd $RUNDIR
     mkdir -p $DATEDIR
@@ -212,9 +236,24 @@ EOF
 			    mv $RUNDIR/$BUILDDIR/$UNIXBENCHDIR/results/* .
 			popd
 		popd
+		
+		# reaim
+		mkdir -p reaim
+		pushd reaim
+		    set -x
+		    mkdir -p /tmp/diskdir
+		    mkdir -p out
+		    reaim -l `pwd`/out
+		popd
+		
+
+		# stress
+		mkdir -p stress
+		pushd stress
+		    $RUNDIR/$BUILDDIR/$STRESSDIR/out/bin/stress --cpu 2 --io 1 --vm 1 --vm-bytes 128M --timeout 10s --verbose > stress.log
+		popd
 		fi
-		
-		
+
 	popd
 	
 popd
