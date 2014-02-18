@@ -121,12 +121,17 @@ pushd $RUNDIR
 	    if test ! -f aclocal.m4 ; then
 		./bootstrap
 	    fi
+	    if test ! -d out ; then
+		./configure --prefix=`pwd`/out
+		make
+		make install
+	    fi
 	popd
 	
     popd
 popd
 
-
+exit 0
 # RUN
 pushd $RUNDIR
     mkdir -p $DATEDIR
@@ -197,7 +202,6 @@ EOF
 			make -C $RUNDIR/$BUILDDIR/$LMBENCH3DIR rerun | tee log.txt
 			mv $RUNDIR/$BUILDDIR/$LMBENCH3DIR/results/x86_64-linux-gnu/* .
 		popd
-		fi
 
 		# UnixBench
 		mkdir -p UnixBench
@@ -208,6 +212,7 @@ EOF
 			    mv $RUNDIR/$BUILDDIR/$UNIXBENCHDIR/results/* .
 			popd
 		popd
+		fi
 		
 		
 	popd
