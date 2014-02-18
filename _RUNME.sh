@@ -1,4 +1,8 @@
 #!/bin/bash
+# Download, build and run various benchmarks
+#
+# (C) 2014 Jan-Simon Möller dl9pf@gmx.de
+# License GPLv2
 
 
 RUNDIR=~/LFS426-tests
@@ -152,6 +156,17 @@ pushd $RUNDIR
 	    gcc -o stream ../../$STREAMFILE
 	popd
 	
+	# llcbench
+	extract $LLCBENCHFILE $LLCBENCHDIR
+	pushd $LLCBENCHDIR
+	    mkdir bin
+	    ln -sf /usr/bin/gfortran bin/g77
+	    export PATH=$PATH:`pwd`/bin
+	    make linux-lam
+	    make cache-bench 
+	    # cache-run, cache-script, cache-graph
+	popd
+	
     popd
 popd
 
@@ -252,7 +267,19 @@ EOF
 		pushd stress
 		    $RUNDIR/$BUILDDIR/$STRESSDIR/out/bin/stress --cpu 2 --io 1 --vm 1 --vm-bytes 128M --timeout 10s --verbose > stress.log
 		popd
+		
+		# stream
+		mkdir -p stream
+		pushd stream
+		    $RUNDIR/$BUILDDIR/$STREAMDIR/stream 2>&1 > stream.log
+		popd
 		fi
+		
+		# llcbench (cachebench)
+		mkdir -p llcbench
+		pushd llcbench
+		    make -C $RUNDIR/$BUILDDIR/$LLCBENCHDIR/ cache-run cache-script cache-graph
+		popd
 
 	popd
 	

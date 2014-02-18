@@ -31,9 +31,10 @@ $common = [	"strace", "sudo", "wget", "screen", "git", "binutils",
 	]
 
 
-$lf426  = [ "memtest86+", "", "" ]
+$lf426  = [ "memtest86+", "blas-devel", ]
 
 $lf331  = [ "binutils",]
 
 package { $common: }
+package { $lf426: }
 
