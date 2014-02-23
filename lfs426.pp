@@ -31,7 +31,8 @@ $common = [	"strace", "sudo", "wget", "screen", "git", "binutils",
 	]
 
 
-$lf426  = [ "memtest86+", "blas-devel", "sysstat", "collectl", "nagios", "termcap"]
+$lf426  = [ "memtest86+", "blas-devel", "sysstat", "collectl", "nagios", "termcap", "ncurses-devel",
+	    "zlib-devel", "zlib-devel-static",]
 
 $lf331  = [ "binutils",]
 
