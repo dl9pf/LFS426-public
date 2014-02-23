@@ -175,13 +175,13 @@ popd
 pushd $RUNDIR
     mkdir -p $DATEDIR
 	pushd $DATEDIR
-		if false; then
+#		if false; then
 		mkdir -p ltp
 		pushd ltp
-			$RUNDIR/$BUILDDIR/$LTPDIR/out/runltp -p -d `pwd` -C `pwd`/failed.cmd -l `pwd`/ltp.log -o `pwd`/result.log -g `pwd`/result.html 
+#			$RUNDIR/$BUILDDIR/$LTPDIR/out/runltp -p -d `pwd` -C `pwd`/failed.cmd -l `pwd`/ltp.log -o `pwd`/result.log -g `pwd`/result.html 
 		popd
 		
-		
+		if false ; then
 		mkdir -p lmbench2
 		pushd lmbench2
 			cat > $RUNDIR/$BUILDDIR/$LMBENCH2DIR/bin/x86_64-linux-gnu/CONFIG.$(hostname) << EOF
@@ -211,6 +211,7 @@ EOF
 			make -C $RUNDIR/$BUILDDIR/$LMBENCH2DIR rerun | tee log.txt
 			mv $RUNDIR/$BUILDDIR/$LMBENCH2DIR/results/x86_64-linux-gnu/* .
 		popd
+		fi
 		
 		mkdir -p lmbench3
 		pushd lmbench3
@@ -273,7 +274,7 @@ EOF
 		pushd stream
 		    $RUNDIR/$BUILDDIR/$STREAMDIR/stream 2>&1 > stream.log
 		popd
-		fi
+#		fi
 		
 		# llcbench (cachebench)
 		mkdir -p llcbench
